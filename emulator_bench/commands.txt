@@ -1,0 +1,99 @@
+CUDA_VISIBLE_DEVICES=2 python emulator_bench/run_split_benchmarks.py --value_type kcat
+CUDA_VISIBLE_DEVICES=1 python emulator_bench/run_split_benchmarks.py --value_type km
+CUDA_VISIBLE_DEVICES=2 python emulator_bench/run_split_benchmarks.py --value_type ki
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/run_split_benchmarks.py \
+    --value_type kcat \
+    --seeds 41 42 43 44 45 \
+    --primary_metric MSE
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/tune_optuna.py \
+    --value_type kcat \
+    --target_col log10_value \
+    --sequence_col sequence \
+    --smiles_col smiles \
+    --metric MSE \
+    --eval_split val \
+    --seeds 41 42 43 44 45 \
+    --max_jobs 10 \
+    --n_trials 40 \
+    --thresholds threshold_0.4 \
+    --study_name kcat_t04 \
+    --separate_by_split_group \
+    --parallel_runs_per_trial 2 \
+    --trial_parallelism 2
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/tune_optuna.py \
+    --value_type km \
+    --target_col log10_value \
+    --sequence_col sequence \
+    --smiles_col smiles \
+    --metric MSE \
+    --eval_split val \
+    --seeds 41 42 43 44 45 \
+    --max_jobs 10 \
+    --n_trials 40 \
+    --thresholds threshold_0.4 \
+    --study_name km_t04 \
+    --separate_by_split_group \
+    --parallel_runs_per_trial 2 \
+    --trial_parallelism 2
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/tune_optuna.py \
+    --value_type ki \
+    --target_col log10_value \
+    --sequence_col sequence \
+    --smiles_col smiles \
+    --metric MSE \
+    --eval_split val \
+    --seeds 41 42 43 44 45 \
+    --max_jobs 10 \
+    --n_trials 40 \
+    --thresholds threshold_0.4 \
+    --study_name ki_t04 \
+    --separate_by_split_group \
+    --parallel_runs_per_trial 2 \
+    --trial_parallelism 2
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/run_split_benchmarks.py \
+    --value_type kcat \
+    --seeds 41 42 43 44 45 \
+    --hparams_json /home/adhil/github/EMULaToR/data/processed/baselines/ProKcat/kcat/optuna_studies/kcat_t04__substrate_splits_best_hparams.json \
+    --split_groups substrate_splits \
+    --overwrite
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/run_split_benchmarks.py \
+    --value_type kcat \
+    --seeds 41 42 43 44 45 \
+    --hparams_json /home/adhil/github/EMULaToR/data/processed/baselines/ProKcat/kcat/optuna_studies/kcat_t04__enzyme_sequence_splits_best_hparams.json \
+    --split_groups enzyme_sequence_splits \
+    --overwrite
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/run_split_benchmarks.py \
+    --value_type km \
+    --seeds 41 42 43 44 45 \
+    --hparams_json /home/adhil/github/EMULaToR/data/processed/baselines/ProKcat/km/optuna_studies/km_t04__substrate_splits_best_hparams.json \
+    --split_groups substrate_splits \
+    --overwrite
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/run_split_benchmarks.py \
+    --value_type km \
+    --seeds 41 42 43 44 45 \
+    --hparams_json /home/adhil/github/EMULaToR/data/processed/baselines/ProKcat/km/optuna_studies/km_t04__enzyme_sequence_splits_best_hparams.json \
+    --split_groups enzyme_sequence_splits \
+    --overwrite
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/run_split_benchmarks.py \
+    --value_type ki \
+    --seeds 41 42 43 44 45 \
+    --hparams_json /home/adhil/github/EMULaToR/data/processed/baselines/ProKcat/ki/optuna_studies/ki_t04__substrate_splits_best_hparams.json \
+    --split_groups substrate_splits \
+    --overwrite
+
+CUDA_VISIBLE_DEVICES=0 python emulator_bench/run_split_benchmarks.py \
+    --value_type ki \
+    --seeds 41 42 43 44 45 \
+    --hparams_json /home/adhil/github/EMULaToR/data/processed/baselines/ProKcat/ki/optuna_studies/ki_t04__enzyme_sequence_splits_best_hparams.json \
+    --split_groups enzyme_sequence_splits \
+    --overwrite
+
